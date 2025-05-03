@@ -16,5 +16,8 @@
     "url": "https://github.com/enbliq/capsule-labs/issues"
   },
   "homepage": "https://github.com/enbliq/capsule-labs#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "mongoose": "^8.14.1"
+  }
 }

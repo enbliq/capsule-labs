@@ -4,10 +4,13 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HealthModule } from './health/health.module';
+import { TimeBombCapsuleModule } from "./capsules/timebomb/timebomb-capsule.module"
 import { UsersModule } from './users/users.module';
+
 
 @Module({
   imports: [
+    TimeBombCapsuleModule,
     HealthModule,
     UsersModule,
     ConfigModule.forRoot({ isGlobal: true }),
