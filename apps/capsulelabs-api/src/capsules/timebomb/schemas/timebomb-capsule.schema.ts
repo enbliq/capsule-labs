@@ -31,3 +31,6 @@ export class TimeBombCapsule extends BaseCapsule {
 }
 
 export const TimeBombCapsuleSchema = SchemaFactory.createForClass(TimeBombCapsule)
+
+// Add index for geospatial queries
+TimeBombCapsuleSchema.index({ location: "2dsphere" })
