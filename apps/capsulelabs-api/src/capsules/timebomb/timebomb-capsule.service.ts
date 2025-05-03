@@ -1,10 +1,13 @@
-import { Injectable, BadRequestException, NotFoundException } from "@nestjs/common"
+import { Injectable, BadRequestException, NotFoundException, ConflictException } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import type { Model } from "mongoose"
 import { v4 as uuidv4 } from "uuid"
 import { TimeBombCapsule } from "./schemas/timebomb-capsule.schema"
 import type { PlantTimeBombDto } from "./dto/plant-timebomb.dto"
 import type { NearbyRequestDto } from "./dto/nearby-request.dto"
+import type { NearbyCapsuleDto } from "./dto/nearby-response.dto"
+import type { DefuseRequestDto } from "./dto/defuse-request.dto"
+import type { DefuseResponseDto } from "./dto/defuse-response.dto"
 import type { UsersService } from "../../users/users.service"
 
 @Injectable()
@@ -129,5 +132,57 @@ export class TimeBombCapsuleService {
         previewHint,
       }
     })
+  }
+
+  async defuseTimeBomb(id: string, defuseRequestDto: DefuseRequestDto): Promise<DefuseResponseDto> {
+    // Validate user exists
+    const user = await this.usersService.findByUsername(defuseRequestDto.username)
+    if (!user) {
+      throw new BadRequestException(`User with username ${defuseRequestDto.username} not found`)
+    }
+
+    // Find the TimeBomb capsule
+    const timeBomb = await this.findById(id)
+    const now = new Date()
+
+    // Check if the capsule is expired
+    if (timeBomb.expiresAt < now) {
+      throw new BadRequestException("This TimeBomb capsule has expired")
+    }
+
+    // Check if the capsule is already defused
+    if (timeBomb.status === "defused") {
+      throw new BadRequestException("This TimeBomb capsule has already been defused")
+    }
+
+    // Check if the user has already defused this capsule
+    if (timeBomb.defusers.includes(defuseRequestDto.username)) {
+      throw new ConflictException("You have already defused this TimeBomb capsule")
+    }
+
+    // Add the user to the defusers list
+    timeBomb.defusers.push(defuseRequestDto.username)
+
+    // Check if max defusers reached
+    const isMaxDefusersReached = timeBomb.defusers.length >= timeBomb.maxDefusers
+
+    // Update the status if max defusers reached
+    if (isMaxDefusersReached) {
+      timeBomb.status = "defused"
+    }
+
+    // Save the updated capsule
+    await timeBomb.save()
+
+    // Prepare the response
+    const content = timeBomb.contentType === "text" ? timeBomb.message : timeBomb.mediaUrl
+
+    return {
+      id: timeBomb.id,
+      contentType: timeBomb.contentType,
+      content: content || "",
+      defused: true,
+      isMaxDefusersReached,
+    }
   }
 }
