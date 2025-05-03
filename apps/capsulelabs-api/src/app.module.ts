@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ServeStaticModule } from "@nestjs/serve-static"
+import { join } from "path"
 import { HealthModule } from './health/health.module';
 import { TimeBombCapsuleModule } from "./capsules/timebomb/timebomb-capsule.module"
 import { UsersModule } from './users/users.module';
@@ -24,6 +26,19 @@ import { UsersModule } from './users/users.module';
           return connection;
         },
       }),
+    }),
+    ServeStaticModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        const uploadDir = configService.get<string>("UPLOAD_DIR") || "uploads"
+        return [
+          {
+            rootPath: join(process.cwd(), uploadDir),
+            serveRoot: "/uploads",
+          },
+        ]
+      },
+      inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
