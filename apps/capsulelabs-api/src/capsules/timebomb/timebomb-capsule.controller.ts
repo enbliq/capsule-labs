@@ -3,7 +3,10 @@ import type { TimeBombCapsuleService } from "./timebomb-capsule.service"
 import type { PlantTimeBombDto } from "./dto/plant-timebomb.dto"
 import { TimeBombResponseDto } from "./dto/timebomb-response.dto"
 import type { NearbyRequestDto } from "./dto/nearby-request.dto"
-import type { NearbyCapsuleDto } from "./dto/nearby-response.dto"
+import { Controller, Post, Body, Get, Param } from "@nestjs/common"
+import type { TimeBombCapsuleService } from "./timebomb-capsule.service"
+import type { PlantTimeBombDto } from "./dto/plant-timebomb.dto"
+import { TimeBombResponseDto } from "./dto/timebomb-response.dto"
 
 @Controller("timebomb")
 export class TimeBombCapsuleController {

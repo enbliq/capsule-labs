@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid"
 import { TimeBombCapsule } from "./schemas/timebomb-capsule.schema"
 import type { PlantTimeBombDto } from "./dto/plant-timebomb.dto"
 import type { NearbyRequestDto } from "./dto/nearby-request.dto"
-import type { NearbyCapsuleDto } from "./dto/nearby-response.dto"
 import type { UsersService } from "../../users/users.service"
 
 @Injectable()
