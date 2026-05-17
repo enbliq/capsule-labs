@@ -1,6 +1,6 @@
 # Nest
 
-Welcome to **Nest**! This is a **monorepo** managing the frontend, backend API, and Stellar payment services for the Unguwa platform.
+Welcome to **Nest**! This is a **monorepo** managing the frontend, backend API, and Stellar payment services for the Nest platform.
 
 Nest is a rental marketplace connecting **landlords** and **tenants** directly — removing middlemen by enabling property listings, transparent reviews, and seamless rent payments.
 
